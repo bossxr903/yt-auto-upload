@@ -1,12 +1,11 @@
 
-import google.generativeai as genai
+from google import genai
 from typing import Dict
 
 
 class GeminiClient:
     def __init__(self, api_key: str):
-        genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel("gemini-1.5-flash")
+        self.client = genai.Client(api_key=api_key)
 
     def generate_metadata(self, filename: str) -> Dict[str, str]:
         """
@@ -28,7 +27,10 @@ class GeminiClient:
         Hashtags: <hashtag1,hashtag2,...>
         """
 
-        response = self.model.generate_content(prompt)
+        response = self.client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=prompt
+        )
         text = response.text
 
         # Parse response
