@@ -1,1 +1,37 @@
+name: Daily YouTube Upload
 
+on:
+  schedule:
+    # Runs every day at 9:00 UTC (adjust as needed)
+    - cron: '0 8 * * *'
+  workflow_dispatch:   # Allow manual trigger
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Create credential files from secrets
+        run: |
+          echo "${{ secrets.CLIENT_SECRET_JSON }}" > client_secret.json
+          echo "${{ secrets.TOKEN_JSON }}" > token.json
+
+      - name: Create .env file
+        run: |
+          echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> .env
+          echo "SOURCE_FOLDER_ID=${{ secrets.SOURCE_FOLDER_ID }}" >> .env
+          echo "UPLOADED_FOLDER_ID=${{ secrets.UPLOADED_FOLDER_ID }}" >> .env
+          echo "YOUTUBE_SCHEDULE_TIME=${{ secrets.YOUTUBE_SCHEDULE_TIME }}" >> .env
+
+      - name: Run upload script
+        run: python upload.py
