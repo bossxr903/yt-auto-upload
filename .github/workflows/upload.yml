@@ -2,8 +2,9 @@ name: Daily YouTube Upload
 
 on:
   schedule:
-    # Runs every day at 9:00 UTC (adjust as needed)
-    - cron: '0 8 * * *'
+    # Runs at 8:00 AM and 7:00 PM Bangladesh Time (UTC+6)
+    # 2:00 UTC = 8:00 AM BD, 13:00 UTC = 7:00 PM BD
+    - cron: '0 2,13 * * *'
   workflow_dispatch:   # Allow manual trigger
 
 jobs:
@@ -16,15 +17,19 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
       - name: Install dependencies
         run: pip install -r requirements.txt
 
       - name: Create credential files from secrets
         run: |
-          echo "${{ secrets.CLIENT_SECRET_JSON }}" > client_secret.json
-          echo "${{ secrets.TOKEN_JSON }}" > token.json
+          cat << 'EOF' > client_secret.json
+          ${{ secrets.CLIENT_SECRET_JSON }}
+          EOF
+          cat << 'EOF' > token.json
+          ${{ secrets.TOKEN_JSON }}
+          EOF
 
       - name: Create .env file
         run: |
