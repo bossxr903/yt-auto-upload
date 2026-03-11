@@ -3,7 +3,7 @@ name: Daily YouTube Upload
 on:
   schedule:
     # Runs at 8:00 AM and 7:00 PM Bangladesh Time (UTC+6)
-    # 2:00 UTC = 8:00 AM BD, 13:00 UTC = 7:00 PM BD
+    # 02:00 UTC = 8:00 AM BD, 13:00 UTC = 7:00 PM BD
     - cron: '0 2,13 * * *'
   workflow_dispatch:   # Allow manual trigger
 
@@ -36,7 +36,7 @@ jobs:
           echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" >> .env
           echo "SOURCE_FOLDER_ID=${{ secrets.SOURCE_FOLDER_ID }}" >> .env
           echo "UPLOADED_FOLDER_ID=${{ secrets.UPLOADED_FOLDER_ID }}" >> .env
-          echo "YOUTUBE_SCHEDULE_TIME=${{ secrets.YOUTUBE_SCHEDULE_TIME }}" >> .env
+          echo "YOUTUBE_SCHEDULE_TIMES=${{ secrets.YOUTUBE_SCHEDULE_TIMES }}" >> .env
 
       - name: Run upload script
         run: python upload.py
